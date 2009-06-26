@@ -1,0 +1,241 @@
+Gridgroesse 64x64px
+das die figuren auch nur bleistifft kritzelleien auf einem block sind
+block und bleistift?
+blumentopf? ^^
+als hintergrund einfach karopapier oder mal grundschul schöhreibheft
+je nach level
+spär vielleicht ganz abenteuerlich: briefpapier mit goldrand ^^
+radiergranaten und bleiminenschwerter 
+zb nachm tod kommt der rießn radiergummi und entfernt die reste
+der endgegner ist nie rießn hand mit bleistift, die dauernd neue monster zeichnet "der schör" ^^
+ein schwerthieb -> stift krazt auf papier
+und wenn du blutest verlierst tinte ^^
+bist ausgebleicht bist
+tintenkleksmonster
+mom da hab ich noch was
+da wüs halt optisch besser wirken wenn man eben einfach was zeichnet und einscannt
+da kann der bene brillieren
+jop und dann digital aufbereiten damits nicht eingescannt wirkt
+auch den block fotografieren
+story:
+Weit hinten, hinter den Wortbergen, fern der Lä
+der Vokalien und Konsonantien leben die Blind-
+texte. Abgeschieden wohnen Sie in Buchstab-
+hausen an der Kües Semantik, eines
+großn Sprachozeans. Ein kleines Bälein na-
+mens Duden fließ durch ihren Ort und versorgt
+sie mit den nöen Regelialien. Es ist ein para-
+diesmatisches Land, in dem einem gebratene
+Satzteile in den Mund fliegen. Nicht einmal von
+der allmätigen Interpunktion werden die Blind-
+texte beherrscht - ein geradezu unorthographi-
+sches Leben. Eines Tages aber beschloßeine
+kleine Zeile Blindtext, ihr Name war Lorem Ip-
+sum, hinaus zu gehen in die weite Grammatik.
+Der groß Oxmox riet ihr davon ab, da es dort
+wimmele von bö Kommata, wilden Frage-
+zeichen und hinterhäigen Semikoli, doch das
+Blindtextchen ließsich nicht beirren. Es packte
+seine sieben Versalien, schob sich sein Initial in
+den Güund machte sich auf den Weg. Als
+es die ersten Hües Kursivgebirges erklom-
+men hatte, warf es einen letzten Blick zurüf die Skyline seiner Heimatstadt Buchstab-
+hausen, die Headline von Alphabetdorf und die
+Subline seiner eigenen Straß, der Zeilengas-
+se. Wehmüief ihm eine rethorische Frage
+üie Wange, dann setzte es seinen Weg
+fort.
+    Michi
+16:26:44: das eben auch reale schatten, verschmutzungen und etwas vom tisch drunter zu sehen ist
+    Sven
+16:26:45: als anregung ^^
+16:26:57: stimmt
+    Michi
+16:26:58: kligt gut ^^
+    Sven
+16:27:26: Leveldrei mör edding in rot ^^
+    Michi
+16:27:37: dann auch lustige lvl grenzen. mann killt ein monster das schreit, alles wackelt und ...
+16:27:51: das buch nebendrann wackelt und klappt auf
+    Sven
+16:27:55: hehe
+    Michi
+16:28:04: und man kann vom block aud die buchseite
+16:28:27: und in dem lvl käft man gegen monster die sich aus druckbuchstaben formen ^^
+16:29:04: oder das"kindermalheft" lvl ^^
+    Sven
+16:29:12: Hindernisse: Riss im papier, tintenfleck (see), fetter Strich, Falte im Papier, Reiszwecke, Tackermetaldingens
+    Michi
+16:29:14: da gibs einige lustige sachen ^^
+    Sven
+16:29:18: hehe
+16:29:20: stimmt
+16:29:24: geil
+    Michi
+16:30:03: ich stell mir grad ein lvl auf nem betrunkenen bemalten typ vor ... ^^
+    Sven
+16:30:09: sind die Waffen zeichen/mal-werkzeuge? oder hat die nur der "schör"?
+16:30:13: hehe
+16:30:24: wer muss da dann herhalten? ^^
+16:30:40: kratz sich im gesicht und verwischt dabei ne mauer die du dann üeren kannst
+    Michi
+16:30:49: also der held kann schon ein cliche mini ritter sein
+    Sven
+16:30:56: hehe
+    Michi
+16:30:59: der auszieht um die welt zu erkunden
+    Sven
+16:31:20: ich dachte so am anfang n simples strichmächen und kann sich halt alles möche equippen
+    Michi
+16:31:25: monster kann eigentlich alles sein, kann man an die untergrünpassen
+    Sven
+16:31:41: so dickschäl, radiert sich den momentanen kopf weg und malt sich nen fetteren
+16:32:02: kreative Freiheit!
+16:32:04: muhaha
+    Michi
+16:32:05: yea
+    Sven
+16:32:23: wie gesagt ich fang heut abend an das system neu aufzusetzen
+16:32:46: implementier mal n simples model (also was du mir gestern diktiert hast) und bereite mal das grafiksystem vor
+16:32:57: sollten die stats angepasst werden an das setting?
+16:33:18: ich mein z.B. Armor = Strichstäe oder so?
+    Michi
+16:33:34: ich üg mir mal was füergrüie nehmen und die logischen ünge. soll ja nicht alles gleich erreichbar sein
+16:33:39: mhh ka
+    Sven
+16:33:44: klingt gut
+16:33:50: was ich auch gut fä wän üvel
+    Michi
+16:33:59: also grafik, es sollte auf jedenfall scrollbar sein
+    Sven
+16:34:01: also so wie früei mario
+16:34:11: scrollbar -> wird gemacht ;)
+16:34:19: ich find es sollte auch zoombar sein
+    Michi
+16:34:52: also das wenn der charakter an den rand lät er nie den rand erreicht, da sich der untergrund weiterbewegt
+    Sven
+16:34:54: wenn der Bene das ganze als vektorgrafiken malen köe hatten wir unglaublich geniale grafik
+    Michi
+16:35:04: denke du verstehst was ich meine
+    Sven
+16:35:04: ja das ist klar
+16:35:07: jop
+16:35:30: @vektorgrafik: nachteil ist das mans nicht auf papier malen kann. Vorteil: nahtloses zoomen ohne verpixeln
+16:35:47: man kann reinzoomen bis die nase deines Charakters den SChirm fü6:35:56: auflögsunabhäig
+16:35:59: das wäschon genial
+    Michi
+16:36:11: ich wüann nie untergrüachen, such mir raus was ich will und lass es im fotostudio von meinma fater mit seiner hightech cam abfotografieren
+    Sven
+16:36:14: und damit der Bene das trotzdem von "hand" malen kann: ich hab n zeichen tablet daheim
+16:36:23: nice
+16:36:29: na dann doch lieber sprites
+16:36:38: also wenn wir fotografierte untergrüaben
+    Michi
+16:36:52: also die untergrüerden kaum vektor grafiken werden
+    Sven
+16:37:02: dann brauchen wir aber eine vorgegebene Auflög sonst müwir die untergrün mehreren auflögen halten
+16:37:06: jop
+    Michi
+16:37:10: das ist schwer realistisch hinzubekommen
+    Sven
+16:37:17: stimmt
+    Michi
+16:37:31: ich wüach der quali der fotos richten
+    Sven
+16:37:34: bedenke bei den untergrüdas sie genüontrast zum konten bieten mü    Michi
+16:37:39: mal es tes
+16:37:43: test machen
+    Sven
+16:37:55: also betrunkener typ muss bleich genug sein ;)
+16:38:00: test machen -> Prototyp?
+    Michi
+16:38:12: testfoto
+16:38:25: oder einfach fragen was die cam max kann
+    Sven
+16:38:36: nuja
+    Michi
+16:38:40: aber mein vater ist erst am So wieder da
+    Sven
+16:38:56: selbst wenn die cam nix kann: meine handykamera macht 3M pix
+16:39:11: also ist die auflög garantiert grö als der Rechner darstellen kann
+16:39:23: ergo: ist die auflög der kamera irrelevant
+16:40:02: es geht glaub ich eher darum wie klein kön wirs machen so das man noch genüsieht udn trotzdem auf genüystemen anschaubar ist
+16:40:16: weil wenn wir n spiel auf 1600x1200 machen kann das nicht jeder spielen
+16:40:45: die hintergrüleiner skalieren ist kein problem bloßbei so dingen wie charaktere usw geht das skallieren nicht
+16:41:24: und es macht das grafik system auch deutlich aufwendiger wenn wir keine feste auflög haben (solange wir keine vektorgrafiken haben)
+16:42:47: ich glaub 1024x768 ist mittlerweile ein min oder?
+16:42:57: niemand hat mehr weniger udn wenn doch: pech ^^
+    Michi
+16:43:11: du musst nur bedenken, ich mach ein foto von einem blatt papier mit rand paar falten flecken allem drum und drann
+    Sven
+16:43:35: jop
+    Michi
+16:43:55: im spiel, um auch ne einigermaßn groß welt zu bieten, rennr der char auf einem kleinen ausschnitt des ganzem rum
+16:44:24: ergo muss man schon ordentlich renzoomen kön in das bild ohne zu grob zu werden
+    Sven
+16:44:28: wir sollten versuchen das die flecken auf dem hintergrund auch als "hintergrundflecken" zu erkennen sind
+16:45:10: so das wir richtige flecken füdernisse und so bauen kön und die dann auch darauf herumschieben
+16:45:22: sonst sind die karten so unflexibel
+16:45:37: jedesmal n neues Bild machen nur weil der Fleck etwas zu weit links ist ^^
+    Michi
+16:46:11: ne die bilder geben nur den absolut äersten rand der welt vor
+    Sven
+16:46:16: @ zoomen: hast recht die kamera soltle also so eine groß auflög haben das der kleinst möche zoombereich immernoch 1024x786 hat
+16:46:21: ah ok
+    Michi
+16:46:36: andere sachen sollten auch eher als kritzeleien auf dem block sein
+    Sven
+16:47:01: das klingt alles genial! bin begeistert
+16:47:14: aber Michi lass uns das auch durchziehn.
+16:47:29: oder erst garnicht anfangen, ganz oder garnicht
+    Michi
+16:48:15: garantieren kann ich nichts, aber ich bin gewillt es zu versuchen
+16:48:31: zeit dafüe ich wenn in näster zeit ;-)
+    Sven
+16:49:03: will auch keine garantien, nur wissen das ich da nicht stunden reinsteck nur um dann zu merken das die anderen plöich doch kein bock mehr haben
+    Michi
+16:49:33: bock hab ich, das ist sicher
+    Sven
+16:49:44: ok
+16:50:23: ich mein das ding muss ja auch nicht morgen fertig werden das ist schon was läerfristiges, also ich mein in n paar wochen kann man schon was zocken aber der spielspaßwird noch nciht wirklich vorhanden seins
+16:54:57: wir sollten unsere Diskussion irgendwo dokumentieren
+17:16:32: wie siehts aus bezü open source usw? Hast du was dagegen das ganze öntlich zu machen? ich mein damit eigentlich nur das wir uns eine öntliche platform nehmen. Vorteil: das spiel kann man runterladen und alle dateien die dafüöt sind und die wir so ansammeln werden online gespeichert und die äerungen an dateien werden geloggt.
+Nachteil: jeder kann alle Dateien einsehn
+17:16:47: zumindest jeder der die URL kennt ^^
+    Michi
+17:17:12: klar is schon ok
+17:17:29: hab nicht vor damit millionen zu machen ^^
+    Sven
+17:17:33: hehe
+17:17:42: gut dann leg ich nachher gleich mal ein repository an
+17:17:56: schonmal mit ner quellverwaltung geschafft?
+    Michi
+17:18:05: nö  Sven
+17:18:13: sowas wie SVN oder CSV oder Sourcesafe oder git oder mercury oder oder oder ^^
+17:18:25: http://de.wikipedia.org/wiki/Versionsverwaltung
+    Michi
+17:18:35: nein nein und ... nein
+    Sven
+17:18:40: ^^
+17:19:07: na dann bringen wir dir das demnäst mal bei, ist absolut simpel und absolut nö sobald mehr als eine Person an ner Datei schafft
+    Michi
+17:20:39: mhh mal en namen ügen 
+    Sven
+17:20:57: hehe woltl ich grade fragen
+17:21:01: leg grade das projekt an ^^
+17:21:19: und ne kurz beschreibung brauchen wir auch
+17:21:27: ich hab mal: ein RPG! eingegeben ^^
+17:21:45: udn name vorerst: A RPG game
+17:21:46: ^^
+17:21:58: hast du n google account?
+    Michi
+17:22:00: pencil & Dragons
+17:22:02: jup
+    Sven
+17:22:09: hehe
+17:22:19: muss dann schon ne alliteration sein
+17:23:02: pencil & predators
+    Michi
+17:26:15: the rubber and pencil game ... kurz rpg :-P
+    Sven
+17:26:16: sheet & scribbles
