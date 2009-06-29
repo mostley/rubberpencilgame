@@ -1,5 +1,6 @@
 
-installation:
+== Installation ==
+
 - download and install python min 2.6
 		http://python.org/download/
 - download and install pygame min 1.8
@@ -7,8 +8,36 @@ installation:
 - download and install rabbyt min 0.8
 		http://pypi.python.org/pypi/Rabbyt/
 
+== Compilation ==
+
 compile under Windows:
 - double click main.py
 
 under linux or windows regular command shell with set environment variables:
 - type: "python main.py"
+
+== Level Editor ==
+
+- unpack pgu-0.12.2.zip in libs folder
+- got to pgu-0.12.2.zip/scripts
+- run leveledit
+
+Controls other than mouse:
+l - load
+s - save
+p - preview
+
+a - select all
+z - undo
+c - copy selection to clipboard
+v - paste clipboard at selection origin
+delete - delete selection
+f - fill selection
+
+t - switch tile & bkgr layers
+
+arrows - change tile
+shift+arrows - scroll screen by 1/8 screen size jumps
+ctrl+arrows - scroll screen by full screen size jumps
+return - toggle fullscreen
+
