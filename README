@@ -1,0 +1,14 @@
+
+installation:
+- download and install python min 2.6
+		http://python.org/download/
+- download and install pygame min 1.8
+		http://www.pygame.org/download.shtml
+- download and install rabbyt min 0.8
+		http://pypi.python.org/pypi/Rabbyt/
+
+compile under Windows:
+- double click main.py
+
+under linux or windows regular command shell with set environment variables:
+- type: "python main.py"
