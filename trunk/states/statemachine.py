@@ -18,8 +18,13 @@ class Statemachine:
 	def __init__(self, main):
 		self.main = main
 	
-	def append(self, state):
+	def push(self, state):
 		self.states.append(state)
+	
+	def pop(self):
+		if len(self.states) > 0:
+			return self.states.remove(len(self.states)-1)
+		else: return None
 	
 	def draw(self, visualizer, dt):
 		for state in self.states:

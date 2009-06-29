@@ -1,35 +1,35 @@
 import pygame,rabbyt
+from pgu import tilevid, timer, gui
 
 class Visualizer:
 	screen = None
 	size = (640,480)
+	tilesize = (32,32)
 	main = None
-	tilevid = None
-	tdata = {
-		0x01:('player',tile_block,{'top':1,'bottom':1,'left':1,'right':1}),
-		0x02:('player',tile_block,{'top':1,'bottom':1,'left':1,'right':1}),
-		0x20:('player',tile_coin,None),
-		0x30:('player',tile_fire,None),
-	}
-	
+	tileengine = None
+	app = None
+
 	def __init__(self, main):
 		self.main = main
 		pygame.init()
-		self.screen = pygame.display.set_mode(self.size, pygame.OPENGL | pygame.DOUBLEBUF)
+		self.screen = pygame.display.set_mode(self.size)#, pygame.OPENGL | pygame.DOUBLEBUF)
 		rabbyt.set_viewport(self.size)
 		rabbyt.set_default_attribs()
 		
 		pygame.font.init();
 		
-		self.tilevid = tilevid.Tilevid()
-		(self.tilevid.view.w,self.tilevid.view.h) = self.size
-		self.tilevid.screen = self.screen
-		self.frame = 0
-		self.tilevid.tga_load_tiles('tiles.tga',self.size,tdata)
+		self.app = gui.App()
+		self.app.connect(gui.QUIT, self.app.quit, None)
+		btn = gui.Button("test")
+		self.app.init(btn)
 	
 	def draw(self, statemachine, dt):
 		rabbyt.clear()
 		
 		statemachine.draw(self, dt)
 		
-		pygame.display.flip()
+		self.app.paint(self.screen)
+		
+	
+	def quit(self):
+		pass
