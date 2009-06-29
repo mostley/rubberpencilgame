@@ -7,6 +7,7 @@ from postman import Postman
 from states.statemachine import Statemachine
 from states.menustate import MenuState
 from pygame.locals import *
+from pgu import tilevid, timer
 
 if pygame.font == None: print "no fonts!"
 
