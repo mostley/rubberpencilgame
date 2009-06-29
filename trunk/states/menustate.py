@@ -13,7 +13,7 @@ class MenuState(State):
 		State.draw(self, visualizer, dt)
 		
 		x = self.font.render("Start", True, (255,0,0))
-		visualizer.screen.blit(x, (0,0))
+		#visualizer.screen.blit(x, (0,0))
 		
 	
 	def update(self, dt):
