@@ -1,3 +1,5 @@
+import rabbyt, pyglet
+from enums import *
 
 class GameObject(rabbyt.Sprite):
 	sprite = None
@@ -12,14 +14,28 @@ class GameObject(rabbyt.Sprite):
 	def render(self, dt):
 		self.sprite.render()
 		if self.showaabb:
-			print repr(self)
-			#pygame.draw.rect(self.sprite, (255,0,0), self.getRect(), 10)
+			#print repr(self)
+			x = int(self.sprite.x)
+			y = int(self.sprite.y)
+			w = int(self.width)
+			h = int(self.height)
+			
+			pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
+			lines = (x, y, 
+					 x, y + h,
+					 x, y + h,
+					 x + w, y + h,
+					 x + w, y + h,
+					 x + w, y,
+					 x + w, y,
+					 x, y)
+			pyglet.graphics.draw(len(lines)/2, pyglet.gl.GL_LINES, ('v2i', lines))
 	
-	def GetSprites(self): return [self.sprite]
-	def SetPosition(self, pos): (self.sprite.x, self.sprite.y) = pos
-	def GetRect(self): return (self.sprite.x, self.sprite.y, self.width, self.height)
+	def getSprites(self): return [self.sprite]
+	def setPosition(self, pos): (self.sprite.x, self.sprite.y) = pos
+	def getRect(self): return (self.sprite.x, self.sprite.y, self.width, self.height)
+	def getIntegerRect(self): return (int(self.sprite.x), int(self.sprite.y), int(self.width), int(self.height))
 	def __repr__(self): return "x: %d y: %d w: %d h: %d" % (self.sprite.x, self.sprite.y, self.width, self.height)
-
 
 class Block(GameObject):
 	def __init__(self, texture):
