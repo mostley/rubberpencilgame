@@ -1,42 +1,49 @@
 #!/usr/bin/python
 
-import rabbyt, pyglet
-from pyglet.window import Window 
+import rabbyt
+from pyglet.window import Window
+from pyglet import clock
 import os.path
+from pyglet import font
 
-import from enums import *
-import from gameobjects import *
+from enums import *
+from gameobjects import *
+from spritetext import *
 
-class Main(pyglet.window.Window):
-	#screen = None
+class Main(Window):
 	objects = []
 	sprites = []
-	running = False
 	size = (800,600)
-	window = None
 	player = None
+	textsprite = None
 	
-	def __init__(self, size, window):
-		pyglet.window.Window.__init__(self, width=size[0], height=size[1])
+	def __init__(self, size):
+		Window.__init__(self, width=size[0], height=size[1])
+		
 		self.size = size
-		self.window = window
 		
-		#rabbyt.set_viewport((size[0],size[1]), projection=(0,0,size[0],size[1]))
+		clock.schedule(rabbyt.add_time)
+		clock.set_fps_limit(60)
+		
 		rabbyt.set_default_attribs()
-		
-		pyglet.clock.schedule(rabbyt.add_time)
 		rabbyt.data_directory = os.path.dirname(__file__)
+		
+		ft = font.load('Arial', 24)
+		self.textsprite = SpriteText(ft, "Hello World", xy=(320,240))
+		self.textsprite.rot = rabbyt.lerp(0,360, dt=5, extend="extrapolate")
+		self.textsprite.rgb = rabbyt.lerp((1,0,0), (0,1,0), dt=2, extend="reverse")
+		
 	
 	def addObject(self, obj, pos):
-		obj.SetPosition(pos)
+		obj.setPosition(pos)
 		self.objects.append(obj)
-		spritelist = obj.GetSprites()
+		spritelist = obj.getSprites()
 		for s in spritelist:
 			self.sprites.append(s)
 		if isinstance(obj, Player):
 			self.player = obj
 	
-	def update(self, dt):
+	def updateModel(self, dt):
 		self.player.determineDirection()
 		
 		collisions = rabbyt.collisions.aabb_collide(self.sprites)
@@ -55,54 +62,40 @@ class Main(pyglet.window.Window):
 		for obj in self.objects:
 			if isinstance(obj, Charactor):
 				obj.update(dt)
-		
-		rabbyt.clear((255,255,255))
+	
+	def draw(self, dt):
 		for obj in self.objects:
 			obj.render(dt)
-	#pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
-	#pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', (10, 15, 30, 35)) )
+		
+		self.textsprite.render()
 	
 	def run(self):
-		pyglet.app.run() 
+		while not self.has_exit:
+			dt = clock.tick()
+			self.dispatch_events()
+			
+			self.updateModel(dt)
+			
+			rabbyt.clear((255,255,255))
+			
+			self.draw(dt)
+			
+			self.flip()
 	
 	# == Event Handling ==
-	
 	def on_key_press(self, symbol, modifiers):
 		pass
-
+	
 	def on_key_release(self, symbol, modifiers):
-		pass
-	
-	def on_mouse_motion(self, x, y, dx, dy):
-		pass
-		
-	def on_mouse_press(self, x, y, button, modifiers):
-		pass
-		#pyglet.window.mouse.LEFT
-		#pyglet.window.mouse.MIDDLE
-		#pyglet.window.mouse.RIGHT
-
-	def on_mouse_release(self, x, y, button, modifiers):
-		pass
-
-	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-		pass
-	
-	def on_mouse_enter(self, x, y, buttons, modifiers):
-		pass
-
-	def on_mouse_leave(self, x, y, buttons, modifiers):
 		pass
 	
 	def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
 		pass
-	
-	def on_resize(self, width, height):
-        pass
-			
+
 if __name__ == "__main__":
-	size = (800,600)
-	main = Main(size, window)
+	size = (640, 480)
+	
+	main = Main(size)
 
 	player = Player("img/char_sheet.png")
 	main.addObject(player, (100,100))
