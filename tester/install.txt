@@ -1,0 +1,59 @@
+1. in dieser Reihenfolge installieren
+	http://www.python.org/ftp/python/2.6.2/python-2.6.2.msi
+	http://pyglet.googlecode.com/files/pyglet-1.1.3.msi
+	http://pypi.python.org/packages/2.6/R/Rabbyt/Rabbyt-0.8.2.win32-py2.6.exe#md5=ac1c71c03efae1784d242066c95d3b8c
+
+	Punkt 2 ist optional.
+	Vorteile: neue Versionen sind schneller installiert sowie immer neueste Version
+	Nachteil: ein Programm mehr zu installieren
+
+2. Für einfaches deployment
+	- installieren:
+		http://downloads.sourceforge.net/tortoisesvn/TortoiseSVN-1.6.3.16613-win32-svn-1.6.3.msi?download
+
+	- Ordner auf Festplatte wohin das Spiel installiert werden soll erstellen.
+
+	- Nun hierher browsen:
+		http://code.google.com/p/rubberpencilgame/source/checkout
+	
+	- wenn ein Google-Account exisitert vorher anmelden, dann:
+		auf Link "googlecode.com password." klicken und dortiges Passwort merken oder aufschreiben
+	- Falls nicht später die readonly alternative wählen
+	
+	- nun einen WindowsExplorer zum vorhin erstellten Spielverzeichnis navigieren.
+		
+	- Rechtsklick auf den Ordner
+	- SVN Checkout klicken
+	
+	- Variante mit Google Account
+		- im sich öffnenden Fenster folgenden Text eingeben:
+		https://rubberpencilgame.googlecode.com/svn/trunk/tester rubberpencilgame --username MySuperDuperUsername
+		- natürlich "MySuperDuperUsername" mit dem eigenen Nutzernamen erstezen 
+		- Falls dieser nicht bekannt hier nachschaun: http://code.google.com/p/rubberpencilgame/source/checkout (hinter "[...]rubberpencilgame --username ..."
+	- Readonly Variante
+		- im sich öffnenden Fenster folgenden Text eingeben:
+		http://rubberpencilgame.googlecode.com/svn/trunk/tester rubberpencilgame-read-only
+	- Ok klicken
+	- warten bis fertig
+	- Weiter bei Punkt 3.
+
+	bei neuen Versionen muss ab jetzt nur noch SVN update gerufen werden um die aktuellste Version zu installieren.
+	
+	Falls selbst Änderungen vorgenommen werden (bsp: neue Maps, Bilder oder jegliche andere Änderung) können diese mit SVN Commit wieder zum Server geschickt werden.
+	Bitte bei Änderungen einen Text angeben (im sich öffnenden Fenster) was die Änderung bewirkt.
+	Keine Angst jegliche Änderung sogar das Löschen von Dateien kann Rückgängig gemacht werden
+	Gleichzeitig bearbeitete Dateien werden beim letzt eincheckenden gemergt.
+	
+	Am besten immer updaten bevor man etwas ändert damit man auf der aktuellsten Version arbeitet.
+		
+3. Schnellstart
+	Neueste Version herunterladen von: http://code.google.com/p/rubberpencilgame/downloads/list
+	Enpacken
+	Doppelklick auf die Datei main.py
+
+4. Troubleshooting
+	Falls das Programm nicht funktioniert eine Kommandozeile öffnen zum Ordner navigieren und folgendes Kommando ausführen:
+	python main.py
+	dann Ausgabe an sven {dot} hecht {at} gmail {dot} com schicken.
+
+	Bei sonstigen Fragen.... ihr wisst schon ;)
