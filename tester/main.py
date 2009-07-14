@@ -2,6 +2,7 @@
 
 import rabbyt
 from pyglet.window import Window
+from pyglet.window import key
 from pyglet import clock
 import os.path
 from pyglet import font
@@ -16,6 +17,7 @@ class Main(Window):
 	size = (800,600)
 	player = None
 	textsprite = None
+	keyboardHandler = None
 	
 	def __init__(self, size):
 		Window.__init__(self, width=size[0], height=size[1])
@@ -27,6 +29,10 @@ class Main(Window):
 		
 		rabbyt.set_default_attribs()
 		rabbyt.data_directory = os.path.dirname(__file__)
+		
+		self.keyboardHandler = key.KeyStateHandler()
+		self.push_handlers(self.keyboardHandler)
+
 		
 		ft = font.load('Arial', 24)
 		self.textsprite = SpriteText(ft, "Hello World", xy=(320,240))
@@ -44,7 +50,7 @@ class Main(Window):
 			self.player = obj
 	
 	def updateModel(self, dt):
-		self.player.determineDirection()
+		self.player.determineDirection(self.keyboardHandler)
 		
 		collisions = rabbyt.collisions.aabb_collide(self.sprites)
 		
@@ -83,12 +89,6 @@ class Main(Window):
 			self.flip()
 	
 	# == Event Handling ==
-	def on_key_press(self, symbol, modifiers):
-		pass
-	
-	def on_key_release(self, symbol, modifiers):
-		pass
-	
 	def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
 		pass
 

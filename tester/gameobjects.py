@@ -1,4 +1,6 @@
 import rabbyt, pyglet
+from pyglet.window import key
+
 from enums import *
 
 class GameObject(rabbyt.Sprite):
@@ -9,16 +11,18 @@ class GameObject(rabbyt.Sprite):
 	
 	def __init__(self, texture):
 		self.sprite = rabbyt.Sprite(texture)
-		self.sprite.shape = [-self.width, -self.height, self.width, self.height]
+		#self.sprite.shape = ((-self.width, self.height), (self.width, self.height), (self.width, -self.height), (-self.width, -self.height))
+		self.sprite.shape = [-self.width, self.height, self.width, -self.height]
 	
 	def render(self, dt):
 		self.sprite.render()
+		
 		if self.showaabb:
 			#print repr(self)
-			x = int(self.sprite.x)
-			y = int(self.sprite.y)
-			w = int(self.width)
-			h = int(self.height)
+			x = int(self.sprite.x - 1)
+			y = int(self.sprite.y - 1)
+			w = int(self.width + 1)
+			h = int(self.height + 1)
 			
 			pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
 			lines = (x, y, 
@@ -46,15 +50,18 @@ class Block(GameObject):
 
 class Charactor(GameObject):
 	lastFrameShift = 0
-	spriteWidthFraction = 1.0/12.0
-	speed = 20
-	stepsize = 5.0
+	frameCount = 12.0
+	speed = 0.01
+	stepsize = 2.0
 	nextMovementDirection = MovementDirection.NoWhere
 	frozen = False
 	
 	def __init__(self, texture):
 		GameObject.__init__(self, texture)
-		self.sprite.tex_shape = [0,1,self.spriteWidthFraction,0]
+		self.sprite.tex_shape.width /= self.frameCount
+		self.sprite.tex_shape.left = 0
+		#self.sprite.tex_shape = ((0.0, 0.78125), (0.5859375, 0.78125), (0.5859375, 0.0), (0.0, 0.0))
+		#self.sprite.tex_shape = [0,1,self.spriteWidthFraction,0]
 	
 	def update(self, dt):
 		self.animate(dt)
@@ -73,52 +80,59 @@ class Charactor(GameObject):
 	def animate(self, dt):
 		if self.isMovingLeft():
 			#charactor.texture = "img/char_left.png"
-			self.sprite.shape = [self.width, -self.height, -self.width, self.height]
+			self.sprite.shape = [self.width, self.height, -self.width, -self.height]
 		elif self.isMovingRight():
 			#charactor.texture = "img/char_right.png"
-			self.sprite.shape = [-self.width, -self.height, self.width, self.height]
+			self.sprite.shape = [-self.width, self.height, self.width, -self.height]
 		#elif self.isMovingUp():
 			#charactor.texture = "img/char_up.png"
 		#elif self.isMovingDown():
 			#charactor.texture = "img/char_down.png"
 		
 		if not self.isMovingNoWhere():
-			if dt - self.lastFrameShift > 30:
-				self.lastFrameShift = dt
-				self.sprite.u += self.spriteWidthFraction
-				if self.sprite.u > 1:
-					self.sprite.u = self.spriteWidthFraction
+			self.lastFrameShift += dt
+			
+			if self.lastFrameShift > 0.05:
+				self.lastFrameShift = 0
+				
+				self.sprite.tex_shape.left += self.sprite.tex_shape.width
+				if self.sprite.tex_shape.left >= self.sprite.tex_shape.width * self.frameCount:
+					self.sprite.tex_shape.left = self.sprite.tex_shape.width
 	
 	def handleMovement(self, dt):
+		movingsideways = False
+		
 		if self.isMovingLeft():
 			self.sprite.x -= rabbyt.lerp(0,self.stepsize,dt=self.speed)
-			
+			movingsideways = True
 		elif self.isMovingRight():
 			self.sprite.x += rabbyt.lerp(0,self.stepsize,dt=self.speed)
-			
+			movingsideways = True
+		
+		vStepsize = self.stepsize
+		if movingsideways: vStepsize *= 0.5
+		
 		if self.isMovingUp():
-			self.sprite.y -= rabbyt.lerp(0,self.stepsize,dt=self.speed)
+			self.sprite.y += rabbyt.lerp(0,vStepsize,dt=self.speed)
 			
 		elif self.isMovingDown():
-			self.sprite.y += rabbyt.lerp(0,self.stepsize,dt=self.speed)
+			self.sprite.y -= rabbyt.lerp(0,vStepsize,dt=self.speed)
 		
 
 class Player(Charactor):
 	def __init__(self, texture):
 		Charactor.__init__(self, texture)
 	
-	def determineDirection(self):
-		return None
-		#pressed = pygame.key.get_pressed()
-		
+	def determineDirection(self, keyboardHandler):
 		self.nextMovementDirection = MovementDirection.NoWhere
-		if pressed[K_LEFT]:
+		
+		if keyboardHandler[key.LEFT]:
 			self.nextMovementDirection |= MovementDirection.Left
-		if pressed[K_RIGHT]:
+		if keyboardHandler[key.RIGHT]:
 			self.nextMovementDirection |= MovementDirection.Right
-		if pressed[K_UP]:
+		if keyboardHandler[key.UP]:
 			self.nextMovementDirection |= MovementDirection.Up
-		if pressed[K_DOWN]:
+		if keyboardHandler[key.DOWN]:
 			self.nextMovementDirection |= MovementDirection.Down
 		
 
