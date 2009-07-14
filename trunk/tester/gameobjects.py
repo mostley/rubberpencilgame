@@ -6,34 +6,55 @@ from enums import *
 class GameObject(rabbyt.Sprite):
 	sprite = None
 	showaabb = True
-	width = 50
-	height = 50
+	width = 50.0
+	height = 50.0
+	
+	def get_left(self): return self.sprite.left
+	def set_left(self, val): self.sprite.left = val
+	left = property(get_left, set_left)
+	
+	def get_right(self): return self.sprite.right
+	def set_right(self, val): self.sprite.right = val
+	right = property(get_right, set_right)
+	
+	def get_top(self): return self.sprite.top
+	def set_top(self, val): self.sprite.top = val
+	top = property(get_top, set_top)
+	
+	def get_bottom(self): return self.sprite.bottom
+	def set_bottom(self, val): self.sprite.bottom = val
+	bottom = property(get_bottom, set_bottom)
+	
+	def get_x(self): return self.sprite.x
+	def set_x(self, val): self.sprite.x = val
+	x = property(get_x, set_x)
+	
+	def get_y(self): return self.sprite.y
+	def set_y(self, val): self.sprite.y = val
+	y = property(get_y, set_y)
 	
 	def __init__(self, texture):
 		self.sprite = rabbyt.Sprite(texture)
-		#self.sprite.shape = ((-self.width, self.height), (self.width, self.height), (self.width, -self.height), (-self.width, -self.height))
-		self.sprite.shape = [-self.width, self.height, self.width, -self.height]
+		self.sprite.shape = [0, self.height, self.width, 0]
+		self.sprite.parent = self
 	
 	def render(self, dt):
 		self.sprite.render()
 		
 		if self.showaabb:
 			#print repr(self)
-			x = int(self.sprite.x - 1)
-			y = int(self.sprite.y - 1)
-			w = int(self.width + 1)
-			h = int(self.height + 1)
+			x = int(self.sprite.x)
+			y = int(self.sprite.y)
+			w = int(self.width)
+			h = int(self.height)
 			
 			pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
 			lines = (x, y, 
 					 x, y + h,
-					 x, y + h,
 					 x + w, y + h,
-					 x + w, y + h,
-					 x + w, y,
 					 x + w, y,
 					 x, y)
-			pyglet.graphics.draw(len(lines)/2, pyglet.gl.GL_LINES, ('v2i', lines))
+			pyglet.graphics.draw(len(lines)/2, pyglet.gl.GL_LINE_STRIP, ('v2i', lines))
 	
 	def getSprites(self): return [self.sprite]
 	def setPosition(self, pos): (self.sprite.x, self.sprite.y) = pos
@@ -60,8 +81,6 @@ class Charactor(GameObject):
 		GameObject.__init__(self, texture)
 		self.sprite.tex_shape.width /= self.frameCount
 		self.sprite.tex_shape.left = 0
-		#self.sprite.tex_shape = ((0.0, 0.78125), (0.5859375, 0.78125), (0.5859375, 0.0), (0.0, 0.0))
-		#self.sprite.tex_shape = [0,1,self.spriteWidthFraction,0]
 	
 	def update(self, dt):
 		self.animate(dt)
@@ -80,10 +99,10 @@ class Charactor(GameObject):
 	def animate(self, dt):
 		if self.isMovingLeft():
 			#charactor.texture = "img/char_left.png"
-			self.sprite.shape = [self.width, self.height, -self.width, -self.height]
+			self.sprite.shape = [self.width, self.height, 0, 0]
 		elif self.isMovingRight():
 			#charactor.texture = "img/char_right.png"
-			self.sprite.shape = [-self.width, self.height, self.width, -self.height]
+			self.sprite.shape = [0, self.height, self.width, 0]
 		#elif self.isMovingUp():
 			#charactor.texture = "img/char_up.png"
 		#elif self.isMovingDown():
