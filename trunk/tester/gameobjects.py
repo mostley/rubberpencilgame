@@ -6,8 +6,6 @@ from enums import *
 class GameObject(rabbyt.Sprite):
 	sprite = None
 	showaabb = True
-	width = 50.0
-	height = 50.0
 	
 	def get_left(self): return self.sprite.left
 	def set_left(self, val): self.sprite.left = val
@@ -31,11 +29,19 @@ class GameObject(rabbyt.Sprite):
 	
 	def get_y(self): return self.sprite.y
 	def set_y(self, val): self.sprite.y = val
-	y = property(get_y, set_y)
+	width = property(get_y, set_y)
+	
+	def get_w(self): return self.sprite.shape.width
+	def set_w(self, val): self.sprite.shape.width = val
+	width = property(get_w, set_w)
+	
+	def get_h(self): return self.sprite.shape.height
+	def set_h(self, val): self.sprite.shape.height = val
+	height = property(get_h, set_h)
 	
 	def __init__(self, texture):
 		self.sprite = rabbyt.Sprite(texture)
-		self.sprite.shape = [0, self.height, self.width, 0]
+		self.sprite.shape = [0, 50.0, 50.0, 0]
 		self.sprite.parent = self
 	
 	def render(self, dt):
@@ -45,8 +51,8 @@ class GameObject(rabbyt.Sprite):
 			#print repr(self)
 			x = int(self.sprite.x)
 			y = int(self.sprite.y)
-			w = int(self.width)
-			h = int(self.height)
+			w = int(self.sprite.shape.width)
+			h = int(self.sprite.shape.height)
 			
 			pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
 			lines = (x, y, 
@@ -72,8 +78,7 @@ class Block(GameObject):
 class Charactor(GameObject):
 	lastFrameShift = 0
 	frameCount = 12.0
-	speed = 0.01
-	stepsize = 2.0
+	speed = 100
 	nextMovementDirection = MovementDirection.NoWhere
 	frozen = False
 	
@@ -119,23 +124,20 @@ class Charactor(GameObject):
 					self.sprite.tex_shape.left = self.sprite.tex_shape.width
 	
 	def handleMovement(self, dt):
-		movingsideways = False
+		speed = self.speed
+		
+		if (self.isMovingLeft() or self.isMovingRight()) and (self.isMovingUp() or self.isMovingDown()):
+			speed *= 0.6
 		
 		if self.isMovingLeft():
-			self.sprite.x -= rabbyt.lerp(0,self.stepsize,dt=self.speed)
-			movingsideways = True
+			self.sprite.x -= speed * dt
 		elif self.isMovingRight():
-			self.sprite.x += rabbyt.lerp(0,self.stepsize,dt=self.speed)
-			movingsideways = True
-		
-		vStepsize = self.stepsize
-		if movingsideways: vStepsize *= 0.5
+			self.sprite.x += speed * dt
 		
 		if self.isMovingUp():
-			self.sprite.y += rabbyt.lerp(0,vStepsize,dt=self.speed)
-			
+			self.sprite.y += speed * dt
 		elif self.isMovingDown():
-			self.sprite.y -= rabbyt.lerp(0,vStepsize,dt=self.speed)
+			self.sprite.y -= speed * dt
 		
 
 class Player(Charactor):
