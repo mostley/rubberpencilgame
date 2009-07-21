@@ -13,6 +13,7 @@ from enums import *
 from gameobjects import *
 from spritetext import *
 from camera import *
+from map import Map
 
 
 class Main(Window):
@@ -22,6 +23,7 @@ class Main(Window):
 	textsprite = None
 	keyboardHandler = None
 	camera = None
+	currentMap = None
 	
 	def __init__(self, size):
 		Window.__init__(self, width=size[0], height=size[1])
@@ -45,8 +47,23 @@ class Main(Window):
 		self.textsprite.rot = rabbyt.lerp(0,360, dt=5, extend="extrapolate")
 		self.textsprite.rgb = rabbyt.lerp((1,0,0), (0,1,0), dt=2, extend="reverse")
 		
+		self.currentMap = Map("level00")
+		if not self.currentMap.load():
+			print "Loading Map failed."
+			# todo: show mainmenu
+		else:
+			for x in range(self.currentMap.width):
+				for y in range(self.currentMap.height):
+					tiles = self.currentMap.getTile(x,y)
+					if tiles:
+						for tile in tiles:
+							obj = tile.getSprite()
+							if obj:
+								self.addObject(obj, (x,y))
+		
 	
 	def addObject(self, obj, pos):
+		print obj,pos
 		obj.setPosition(pos)
 		self.objects.append(obj)
 		spritelist = obj.getSprites()
@@ -102,6 +119,8 @@ class Main(Window):
 		
 		self.textsprite.render()
 		
+		self.currentMap.draw(dt)
+		
 		self.drawGrid()
 	
 	def run(self):
@@ -113,6 +132,7 @@ class Main(Window):
 			self.camera.apply()
 			
 			self.updateModel(dt)
+			self.currentMap.update(dt)
 			
 			rabbyt.clear((255,255,255))
 			

@@ -1,0 +1,24 @@
+
+# Header
+# Header Lines need to start with '+'
+# Also they have to concur with this scheme:
+# + NAME Parameters
+#
+# Header names:
+# SIZE
+# TILESIZE
+
++ SIZE 500 500
++ TILESIZE 32 32
+
+# Map Data
+#
+# X Y WIDTH HEIGHT TYPE Parameters
+#
+# Types:
+# 	BLOCK
+# 	BACKGROUND
+# 	PLAYER
+# 	ACTION
+
+0 0 10 10 BLOCK img/block.png
