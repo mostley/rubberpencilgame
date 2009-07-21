@@ -75,17 +75,14 @@ class Main(Window):
 	def updateModel(self, dt):
 		self.player.determineDirection(self.keyboardHandler)
 		
-		collisions = rabbyt.collisions.aabb_collide(self.sprites)
+		collisions2 = rabbyt.collisions.collide_single(self.player.getSprites()[0], self.sprites)
 		
-		for group in collisions:
-			block = None
-			if group[0].parent == player:
-				block = group[1]
-			else:
-				block = group[0]
-			
-			block.rgb = rabbyt.lerp((1,0,0),(1,1,1), dt=.4)
-			
+		if len(collisions2) > 1:
+			for obj in collisions2:
+				if obj == self.player: continue
+				
+				obj.rgb = rabbyt.lerp((1,0,0),(1,1,1), dt=.4)
+				self.player.moveAwayFrom(obj)
 		
 		for obj in self.objects:
 			if isinstance(obj, Charactor):
@@ -156,6 +153,6 @@ if __name__ == "__main__":
 	main.addObject(player, (100,100))
 
 	block = Block("img/block.png")
-	main.addObject(block, (400,400))
+	main.addObject(block, (rabbyt.lerp(0,400, endt=15, extend="reverse"),400))
 	
 	main.run()
