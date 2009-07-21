@@ -1,7 +1,9 @@
 import rabbyt, pyglet
 from pyglet.window import key
+from math import *
 
 from enums import *
+from settings import Settings
 
 class GameObject(rabbyt.Sprite):
 	sprite = None
@@ -29,19 +31,23 @@ class GameObject(rabbyt.Sprite):
 	
 	def get_y(self): return self.sprite.y
 	def set_y(self, val): self.sprite.y = val
-	width = property(get_y, set_y)
+	y = property(get_y, set_y)
 	
 	def get_w(self): return self.sprite.shape.width
 	def set_w(self, val): self.sprite.shape.width = val
-	width = property(get_w, set_w)
+	w = width = property(get_w, set_w)
+	staticWidth = 0
 	
 	def get_h(self): return self.sprite.shape.height
 	def set_h(self, val): self.sprite.shape.height = val
-	height = property(get_h, set_h)
+	h = height = property(get_h, set_h)
+	staticHeight = 0
 	
 	def __init__(self, texture):
 		self.sprite = rabbyt.Sprite(texture)
-		self.sprite.shape = [0, 50.0, 50.0, 0]
+		self.staticWidth = self.sprite.shape.width = 50.0
+		self.staticHeight = self.sprite.shape.height = 50.0
+		
 		self.sprite.parent = self
 	
 	def render(self, dt):
@@ -49,17 +55,20 @@ class GameObject(rabbyt.Sprite):
 		
 		if self.showaabb:
 			#print repr(self)
-			x = int(self.sprite.x)
-			y = int(self.sprite.y)
 			w = int(self.sprite.shape.width)
 			h = int(self.sprite.shape.height)
+			x = int(self.sprite.x - self.sprite.shape.width/2)
+			y = int(self.sprite.y - self.sprite.shape.height/2)
 			
 			pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
 			lines = (x, y, 
 					 x, y + h,
 					 x + w, y + h,
 					 x + w, y,
-					 x, y)
+					 x, y,
+					 x + w, y + h,
+					 x + w, y,
+					 x, y + h)
 			pyglet.graphics.draw(len(lines)/2, pyglet.gl.GL_LINE_STRIP, ('v2i', lines))
 	
 	def getSprites(self): return [self.sprite]
@@ -67,6 +76,19 @@ class GameObject(rabbyt.Sprite):
 	def getRect(self): return (self.sprite.x, self.sprite.y, self.width, self.height)
 	def getIntegerRect(self): return (int(self.sprite.x), int(self.sprite.y), int(self.width), int(self.height))
 	def __repr__(self): return "x: %d y: %d w: %d h: %d" % (self.sprite.x, self.sprite.y, self.width, self.height)
+	
+	def moveAwayFrom(self, obj, dt=0.1):
+		x = float(obj.x) - float(self.x)
+		y = float(obj.y) - float(self.y)
+		l = float(sqrt(x**2.0 + y**2.0))
+		
+		if x != 0:
+			x /= l
+		if y != 0:
+			y /= l
+		
+		self.x -= x * Settings["PenetrationForce"]
+		self.y -= y * Settings["PenetrationForce"]
 
 class Block(GameObject):
 	def __init__(self, texture):
@@ -104,10 +126,10 @@ class Charactor(GameObject):
 	def animate(self, dt):
 		if self.isMovingLeft():
 			#charactor.texture = "img/char_left.png"
-			self.sprite.shape = [self.width, self.height, 0, 0]
+			self.sprite.shape = [self.w/2, self.h/2, -self.w/2, -self.h/2]
 		elif self.isMovingRight():
 			#charactor.texture = "img/char_right.png"
-			self.sprite.shape = [0, self.height, self.width, 0]
+			self.sprite.shape = [-self.w/2, self.h/2, self.w/2, -self.h/2]
 		#elif self.isMovingUp():
 			#charactor.texture = "img/char_up.png"
 		#elif self.isMovingDown():
@@ -127,17 +149,17 @@ class Charactor(GameObject):
 		speed = self.speed
 		
 		if (self.isMovingLeft() or self.isMovingRight()) and (self.isMovingUp() or self.isMovingDown()):
-			speed *= 0.6
+			speed *= 0.7
 		
 		if self.isMovingLeft():
-			self.sprite.x -= speed * dt
+			self.x -= speed * dt
 		elif self.isMovingRight():
-			self.sprite.x += speed * dt
+			self.x += speed * dt
 		
 		if self.isMovingUp():
-			self.sprite.y += speed * dt
+			self.y += speed * dt
 		elif self.isMovingDown():
-			self.sprite.y -= speed * dt
+			self.y -= speed * dt
 		
 
 class Player(Charactor):
