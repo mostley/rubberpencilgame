@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import os
+import sys
 import rabbyt
 from pyglet.window import Window
 from pyglet.window import key
@@ -14,6 +16,22 @@ from gameobjects import *
 from spritetext import *
 from camera import *
 from map import Map
+
+def we_are_frozen():
+    """Returns whether we are frozen via py2exe.
+    This will affect how we find out where we are located."""
+
+    return hasattr(sys, "frozen")
+
+
+def module_path():
+    """ This will get us the program's directory,
+    even if we are frozen using py2exe"""
+
+    if we_are_frozen():
+        return os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+
+    return os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
 
 
 class Main(Window):
@@ -36,7 +54,8 @@ class Main(Window):
 		clock.set_fps_limit(60)
 		
 		rabbyt.set_default_attribs()
-		rabbyt.data_directory = os.path.dirname(__file__)
+		rabbyt.data_directory = module_path()
+		print "Current Data_Directory:", rabbyt.data_directory
 		
 		self.keyboardHandler = key.KeyStateHandler()
 		self.push_handlers(self.keyboardHandler)
@@ -149,10 +168,10 @@ if __name__ == "__main__":
 	
 	main = Main(size)
 
-	player = Player("img/char_sheet.png")
+	player = Player(os.path.normcase(module_path()+"/img/char_sheet.png"))
 	main.addObject(player, (100,100))
 
-	block = Block("img/block.png")
+	block = Block(os.path.normcase(module_path()+"/img/block.png"))
 	main.addObject(block, (rabbyt.lerp(0,400, endt=15, extend="reverse"),400))
 	
 	main.run()

@@ -44,6 +44,7 @@ class GameObject(rabbyt.Sprite):
 	staticHeight = 0
 	
 	def __init__(self, texture):
+		print "Loading Object with Texture: ", texture
 		self.sprite = rabbyt.Sprite(texture)
 		self.staticWidth = self.sprite.shape.width = 50.0
 		self.staticHeight = self.sprite.shape.height = 50.0
