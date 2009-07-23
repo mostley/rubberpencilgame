@@ -6,6 +6,9 @@ class Map:
 	name = ""
 	size = (0,0)
 	tilesize = (0,0)
+	playerPos = (0,0)
+	playerStartPos = (0,0)
+	playerEnterSpeed = 1
 	
 	def getWidth(self): return self.size[0]
 	w = width = property(getWidth)
@@ -47,7 +50,7 @@ class Map:
 			
 			for line in file:
 				lineNumber += 1
-				line = MapLine(self, line, lineNumber)
+				line = MapLine(self, line.replace("  ", " ").strip(), lineNumber)
 				
 				if not line.empty():
 					if line.isCommentLine():
@@ -86,16 +89,31 @@ class MapLine:
 	def isConfigLine(self): return self.text[0] == '+'
 	def isCommentLine(self): return self.text[0] == '#'
 	
-	def parseIntegerTuple(self, inputA, inputB):
+	def parseInteger(self, input):
 		a = None
-		b = None
 		
 		try:
-			a = int(inputA)
-			b = int(inputB)
+			a = int(input)
 		except:
-			self.logParseError("Width or Height parameter is not numerical")
+			self.logParseError("parameter is not numerical")
 			result = False
+		
+		return a
+	
+	def parseFloat(self, input):
+		a = None
+		
+		try:
+			a = float(input)
+		except:
+			self.logParseError("parameter is not numerical")
+			result = False
+		
+		return a
+	
+	def parseIntegerTuple(self, inputA, inputB):
+		a = self.parseInteger(inputA)
+		b = self.parseInteger(inputB)
 		
 		return a, b
 	
@@ -120,6 +138,18 @@ class MapLine:
 					self.map.tilesize = (w, h)
 			else:
 				self.logParseError("Wrong Number of Arguments. Use format: '+ TILESIZE Width Height'")
+				result = False
+		elif type == "playerpos":
+			if len(self.data) >= 6:
+				x, y = self.parseIntegerTuple(self.data[1], self.data[2])
+				sx, sy = self.parseIntegerTuple(self.data[3], self.data[4])
+				speed = self.parseFloat(self.data[5])
+				if x and y and sx and sy and speed:
+					self.map.playerPos = (x, y)
+					self.map.playerStartPos = (sx, sy)
+					self.map.playerEnterSpeed = speed
+			else:
+				self.logParseError("Wrong Number of Arguments. Use format: '+ PLAYERPOS X Y StartX StartY'")
 				result = False
 		
 		return result
