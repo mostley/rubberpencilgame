@@ -61,16 +61,24 @@ class Main(Window):
 		self.keyboardHandler = key.KeyStateHandler()
 		self.push_handlers(self.keyboardHandler)
 		
-		
 		ft = font.load('Arial', 24)
 		self.textsprite = SpriteText(ft, "Hello World", xy=(320,240))
 		self.textsprite.rot = rabbyt.lerp(0,360, dt=5, extend="extrapolate")
 		self.textsprite.rgb = rabbyt.lerp((1,0,0), (0,1,0), dt=2, extend="reverse")
+	
+	def unload(self):
+		pass
+	
+	def showMainMenu(self):
+		pass
+	
+	def loadMap(self, mapname):
+		self.unload()
 		
-		self.currentMap = Map("level00")
+		self.currentMap = Map(mapname)
 		if not self.currentMap.load():
 			print "Loading Map failed."
-			# todo: show mainmenu
+			self.showMainMenu()
 		else:
 			for x in range(self.currentMap.width):
 				for y in range(self.currentMap.height):
@@ -80,7 +88,9 @@ class Main(Window):
 							obj = tile.getSprite()
 							if obj:
 								self.addObject(obj, (x,y))
-		
+			
+			self.player.setPosition(self.currentMap.playerStartPos)
+			self.player.moveTo(self.currentMap.playerPos, self.currentMap.playerEnterSpeed)
 	
 	def addObject(self, obj, pos):
 		print obj,pos
@@ -174,5 +184,7 @@ if __name__ == "__main__":
 
 	block = Block(os.path.normcase(module_path()+"/img/block.png"))
 	main.addObject(block, (rabbyt.lerp(0,400, endt=15, extend="reverse"),400))
+	
+	main.loadMap("level00")
 	
 	main.run()

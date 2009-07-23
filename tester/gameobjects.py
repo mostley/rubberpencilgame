@@ -101,17 +101,26 @@ class Block(GameObject):
 class Charactor(GameObject):
 	lastFrameShift = 0
 	frameCount = 12.0
+	animationCount = 2.0
 	speed = 100
+	animationSpeed = 5
 	nextMovementDirection = MovementDirection.NoWhere
 	frozen = False
+	target = None
+	targetTolerance = 1
 	
 	def __init__(self, texture):
 		GameObject.__init__(self, texture)
 		self.sprite.tex_shape.width /= self.frameCount
+		self.sprite.tex_shape.height /= self.animationCount
 		self.sprite.tex_shape.left = 0
 	
 	def update(self, dt):
 		self.animate(dt)
+		
+		if self.target != None:
+			if abs(self.target[0] - self.x) < self.targetTolerance and abs(self.target[1] - self.y) < self.targetTolerance:
+				self.target = None
 		
 		if not self.frozen:
 			self.handleMovement(dt)
@@ -123,6 +132,12 @@ class Charactor(GameObject):
 	def isMovingRight(self): return (self.nextMovementDirection & MovementDirection.Right) == MovementDirection.Right
 	def isMovingUp(self): return (self.nextMovementDirection & MovementDirection.Up) == MovementDirection.Up
 	def isMovingDown(self): return (self.nextMovementDirection & MovementDirection.Down) == MovementDirection.Down
+	
+	def moveTo(self, target, speed):
+		self.target = target
+		
+		self.x = rabbyt.lerp(end=self.target[0], endt=speed)
+		self.y = rabbyt.lerp(end=self.target[1], endt=speed)
 	
 	def animate(self, dt):
 		if self.isMovingLeft():
@@ -136,15 +151,21 @@ class Charactor(GameObject):
 		#elif self.isMovingDown():
 			#charactor.texture = "img/char_down.png"
 		
-		if not self.isMovingNoWhere():
-			self.lastFrameShift += dt
+		animation = 2
+		if self.isMovingNoWhere():
+			animation = 1
+		
+		self.lastFrameShift += dt
+		
+		if self.lastFrameShift > self.animationSpeed/100.0:
+			self.lastFrameShift = 0
 			
-			if self.lastFrameShift > 0.05:
-				self.lastFrameShift = 0
-				
-				self.sprite.tex_shape.left += self.sprite.tex_shape.width
-				if self.sprite.tex_shape.left >= self.sprite.tex_shape.width * self.frameCount:
-					self.sprite.tex_shape.left = self.sprite.tex_shape.width
+			self.sprite.tex_shape.top = self.sprite.tex_shape.height * animation
+			
+			self.sprite.tex_shape.left += self.sprite.tex_shape.width
+			if self.sprite.tex_shape.left >= self.sprite.tex_shape.width * self.frameCount:
+				self.sprite.tex_shape.left = self.sprite.tex_shape.width
+		
 	
 	def handleMovement(self, dt):
 		speed = self.speed
@@ -170,15 +191,25 @@ class Player(Charactor):
 	def determineDirection(self, keyboardHandler):
 		self.nextMovementDirection = MovementDirection.NoWhere
 		
-		if keyboardHandler[key.LEFT]:
-			self.nextMovementDirection |= MovementDirection.Left
-		if keyboardHandler[key.RIGHT]:
-			self.nextMovementDirection |= MovementDirection.Right
-		if keyboardHandler[key.UP]:
-			self.nextMovementDirection |= MovementDirection.Up
-		if keyboardHandler[key.DOWN]:
-			self.nextMovementDirection |= MovementDirection.Down
-		
+		if self.target == None:
+			if keyboardHandler[key.LEFT]:
+				self.nextMovementDirection |= MovementDirection.Left
+			if keyboardHandler[key.RIGHT]:
+				self.nextMovementDirection |= MovementDirection.Right
+			if keyboardHandler[key.UP]:
+				self.nextMovementDirection |= MovementDirection.Up
+			if keyboardHandler[key.DOWN]:
+				self.nextMovementDirection |= MovementDirection.Down
+		else:
+			if self.target[0] < self.x:
+				self.nextMovementDirection |= MovementDirection.Left
+			elif self.target[0] > self.x:
+				self.nextMovementDirection |= MovementDirection.Right
+			elif self.target[1] > self.y:
+				self.nextMovementDirection |= MovementDirection.Up
+			elif self.target[1] < self.y:
+				self.nextMovementDirection |= MovementDirection.Down
+				
 
 class Enemy(Charactor):
 	def __init__(self, texture):
