@@ -13,7 +13,7 @@ REM pack Release
 copy /Y zip.exe dist
 cd dist
 zip -R release.zip * -x zip.exe
-copy /Y release.zip ..
+move /Y release.zip ..
 cd ..
 
 pause
