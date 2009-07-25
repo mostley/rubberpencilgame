@@ -9,6 +9,9 @@ class Map:
 	playerPos = (0,0)
 	playerStartPos = (0,0)
 	playerEnterSpeed = 1
+	enemies = []
+	enemyRoutes = []
+	main = None
 	
 	def getWidth(self): return self.size[0]
 	w = width = property(getWidth)
@@ -16,8 +19,23 @@ class Map:
 	h = height = property(getHeight)
 	
 	
-	def __init__(self, name):
+	def __init__(self, name, main):
 		self.name = name
+		self.main = main
+	
+	def getNearestRoutPoint(self, obj):
+		result = None
+		resultdist = 99999
+		for route in self.enemyRoutes:
+			for point in route:
+				if result == None:
+					result = point
+				else:
+					dist = obj.getDistance(point)
+					if dist < resultdist:
+						result = point
+						resultdist = dist
+		return result
 	
 	def getTile(self, x, y):
 		""" it's an array you will get! """
@@ -126,30 +144,67 @@ class MapLine:
 		if type == "size":
 			if len(self.data) >= 3:
 				w, h = self.parseIntegerTuple(self.data[1], self.data[2])
-				if w and h:
+				if w != None and h != None:
 					self.map.size = (w, h)
 			else:
 				self.logParseError("Wrong Number of Arguments. Use format: '+ SIZE Width Height'")
 				result = False
+				
 		elif type == "tilesize":
 			if len(self.data) >= 3:
 				w, h = self.parseIntegerTuple(self.data[1], self.data[2])
-				if w and h:
+				if w != None and h != None:
 					self.map.tilesize = (w, h)
 			else:
 				self.logParseError("Wrong Number of Arguments. Use format: '+ TILESIZE Width Height'")
 				result = False
+				
 		elif type == "playerpos":
 			if len(self.data) >= 6:
 				x, y = self.parseIntegerTuple(self.data[1], self.data[2])
 				sx, sy = self.parseIntegerTuple(self.data[3], self.data[4])
 				speed = self.parseFloat(self.data[5])
-				if x and y and sx and sy and speed:
+				if x != None and y != None and sx != None and sy != None and speed != None:
 					self.map.playerPos = (x, y)
 					self.map.playerStartPos = (sx, sy)
 					self.map.playerEnterSpeed = speed
 			else:
 				self.logParseError("Wrong Number of Arguments. Use format: '+ PLAYERPOS X Y StartX StartY'")
+				result = False
+				
+		elif type == "enemy":
+			if len(self.data) >= 5:
+				x, y = self.parseIntegerTuple(self.data[1], self.data[2])
+				level = self.parseInteger(self.data[3])
+				if x != None and y != None and level != None:
+					enemy = Enemy(self.data[4], level, self.map.main)
+					enemy.setPosition((x,y))
+					print enemy
+					self.map.enemies.append(enemy)
+			else:
+				self.logParseError("Wrong Number of Arguments. Use format: '+ ENEMY X Y Level Texture'")
+				result = False
+				
+		elif type == "enemyroute":
+			if len(self.data) >= 1:
+				route = []
+				for tuple in self.data[1:]:
+					tuple = tuple.split(":")
+					x, y = self.parseIntegerTuple(tuple[0], tuple[1])
+					if x != None and y != None:
+						route.append(RoutePoint(x,y))
+				
+				for i in range(len(route)):
+					if i < len(route)-1:
+						route[i].nextPoint = route[i+1]
+					if i > 0:
+						route[i].previousPoint = route[i-1]
+				route[0].previousPoint = route[len(route)-1]
+				route[len(route)-1].nextPoint = route[0]
+				
+				self.map.enemyRoutes.append(route)
+			else:
+				self.logParseError("Wrong Number of Arguments. Use format: '+ ENEMYROUTE X:Y X:Y X:Y ...'")
 				result = False
 		
 		return result
@@ -179,7 +234,7 @@ class MapLine:
 		return result
 	
 	def logParseError(self, error):
-		print "Error on Line %d of Mapfile '%s': '%s'" % (self.number, self.getFileName(), error)
+		print "Error on Line %d of Mapfile '%s': '%s'" % (self.number, self.map.getFileName(), error)
 
 class MapTile:
 	x = 0
@@ -208,8 +263,23 @@ class MapTile:
 			result = Block(texture)
 			result.setPosition((self.x, self.y))
 			result.width, result.height = self.w, self.h
-		else:
+		
+		elif self.type == "background":
 			pass
-			#todo: implement rest
+		
+		elif self.type == "action":
+			pass
+		
+		#todo: implement rest
 		
 		return result
+
+class RoutePoint:
+	x,y = 0,0
+	bounding_radius = 0
+	nextPoint = None
+	previousPoint = None
+	
+	def __init__(self, x, y):
+		self.x = x
+		self.y = y

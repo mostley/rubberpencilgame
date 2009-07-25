@@ -116,7 +116,16 @@ class Camera(object):
 	
 	def zoomIn(self):
 		self.zoomV -= self.zoomSpeed
-	   
+	
+	def toWorldSpace(self, x, y, z): return x + self.x - 320, y + self.y - 240, z + (self.fov - 60)*6.6
+	
+	def focusOn(self, obj):
+		x,y,z = self.toWorldSpace(obj.x, obj.y, 0)
+		#self.x, self.y, self.z = x,y,z
+		print self.x, self.y, "-", x, y
+		self.x, self.y = x, y
+		print self.x, self.y, self.z
+	
 	def apply(self):
 		glLoadIdentity()
 		if self.mode == 1: return

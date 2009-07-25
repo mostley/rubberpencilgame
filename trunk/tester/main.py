@@ -61,10 +61,8 @@ class Main(Window):
 		self.keyboardHandler = key.KeyStateHandler()
 		self.push_handlers(self.keyboardHandler)
 		
-		ft = font.load('Arial', 24)
-		self.textsprite = SpriteText(ft, "Hello World", xy=(320,240))
-		self.textsprite.rot = rabbyt.lerp(0,360, dt=5, extend="extrapolate")
-		self.textsprite.rgb = rabbyt.lerp((1,0,0), (0,1,0), dt=2, extend="reverse")
+		ft = font.load('Arial', 18)
+		self.textsprite = SpriteText(ft, "Gold: 0", 0, 500, rgb = (0,0,0))
 	
 	def unload(self):
 		pass
@@ -75,7 +73,7 @@ class Main(Window):
 	def loadMap(self, mapname):
 		self.unload()
 		
-		self.currentMap = Map(mapname)
+		self.currentMap = Map(mapname, self)
 		if not self.currentMap.load():
 			print "Loading Map failed."
 			self.showMainMenu()
@@ -91,9 +89,12 @@ class Main(Window):
 			
 			self.player.setPosition(self.currentMap.playerStartPos)
 			self.player.moveTo(self.currentMap.playerPos, self.currentMap.playerEnterSpeed)
+			
+			for enemy in self.currentMap.enemies:
+				self.addObject(enemy, (enemy.x,enemy.y))
 	
 	def addObject(self, obj, pos):
-		print obj,pos
+		#print obj,pos
 		obj.setPosition(pos)
 		self.objects.append(obj)
 		spritelist = obj.getSprites()
@@ -102,23 +103,36 @@ class Main(Window):
 		if isinstance(obj, Player):
 			self.player = obj
 	
-	def updateModel(self, dt):
-		self.player.determineDirection(self.keyboardHandler)
+	def checkCollisions(self, obj, dt):
+		collisions = rabbyt.collisions.collide_single(obj.getSprites()[0], self.sprites)
 		
-		collisions2 = rabbyt.collisions.collide_single(self.player.getSprites()[0], self.sprites)
-		
-		if len(collisions2) > 1:
-			for obj in collisions2:
-				if obj == self.player: continue
+		if len(collisions) > 1:
+			for other in collisions:
+				if other == obj: continue
 				
-				obj.rgb = rabbyt.lerp((1,0,0),(1,1,1), dt=.4)
-				self.player.moveAwayFrom(obj)
+				other.rgb = rabbyt.lerp((1,0,0),(1,1,1), dt=.4) # debug
+				obj.collide(other, dt)
+		
+	def enemyCollision(self, dt):
+		for obj in self.objects:
+			if isinstance(obj, Enemy):
+				self.checkCollisions(obj, dt)
+	
+	def updateModel(self, dt):
+		for obj in self.objects:
+			if isinstance(obj, Charactor):
+				obj.determineDirection(dt, self.keyboardHandler)
+		
+		self.checkCollisions(self.player, dt)
+		self.enemyCollision(dt)
 		
 		for obj in self.objects:
 			if isinstance(obj, Charactor):
 				obj.update(dt)
 		
-		if self.keyboardHandler[key.SPACE]: self.camera.reset()
+		if self.keyboardHandler[key.SPACE]:
+			self.camera.reset()
+			self.camera.focusOn(self.player)
 	
 	def drawGrid(self):
 		pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
@@ -144,6 +158,7 @@ class Main(Window):
 		for obj in self.objects:
 			obj.render(dt)
 		
+		self.textsprite.xyz = self.camera.toWorldSpace(self.textsprite.mapSpaceX, self.textsprite.mapSpaceY, 0)
 		self.textsprite.render()
 		
 		self.currentMap.draw(dt)
@@ -181,6 +196,9 @@ if __name__ == "__main__":
 
 	player = Player(os.path.normcase(module_path()+"/img/char_sheet.png"))
 	main.addObject(player, (100,100))
+	
+	#enemy = Enemy(os.path.normcase(module_path()+"/img/enemy_sheet.png"), 0, main)
+	#main.addObject(enemy, (500,500))
 
 	block = Block(os.path.normcase(module_path()+"/img/block.png"))
 	main.addObject(block, (rabbyt.lerp(0,400, endt=15, extend="reverse"),400))

@@ -51,6 +51,12 @@ class GameObject(rabbyt.Sprite):
 		
 		self.sprite.parent = self
 	
+	def getDistance(self, obj):
+		distx = abs(self.x - obj.x)
+		disty = abs(self.y - obj.y)
+		dist = sqrt(distx**2 + disty**2)
+		return dist - obj.bounding_radius - self.bounding_radius
+	
 	def render(self, dt):
 		self.sprite.render()
 		
@@ -78,6 +84,9 @@ class GameObject(rabbyt.Sprite):
 	def getIntegerRect(self): return (int(self.sprite.x), int(self.sprite.y), int(self.width), int(self.height))
 	def __repr__(self): return "x: %d y: %d w: %d h: %d" % (self.sprite.x, self.sprite.y, self.width, self.height)
 	
+	def collide(self, other, dt):
+		self.moveAwayFrom(other)
+	
 	def moveAwayFrom(self, obj, dt=0.1):
 		x = float(obj.x) - float(self.x)
 		y = float(obj.y) - float(self.y)
@@ -103,6 +112,7 @@ class Charactor(GameObject):
 	frameCount = 12.0
 	animationCount = 2.0
 	speed = 100
+	range = 100
 	animationSpeed = 5
 	nextMovementDirection = MovementDirection.NoWhere
 	frozen = False
@@ -114,6 +124,8 @@ class Charactor(GameObject):
 		self.sprite.tex_shape.width /= self.frameCount
 		self.sprite.tex_shape.height /= self.animationCount
 		self.sprite.tex_shape.left = 0
+	
+	def isInRange(self, obj): return self.getDistance(obj) < self.range
 	
 	def update(self, dt):
 		self.animate(dt)
@@ -182,38 +194,81 @@ class Charactor(GameObject):
 			self.y += speed * dt
 		elif self.isMovingDown():
 			self.y -= speed * dt
+			
+	def determineDirection(self, dt):
+		if self.target[0] < self.x:
+			self.nextMovementDirection |= MovementDirection.Left
+		elif self.target[0] > self.x:
+			self.nextMovementDirection |= MovementDirection.Right
+		
+		if self.target[1] > self.y:
+			self.nextMovementDirection |= MovementDirection.Up
+		elif self.target[1] < self.y:
+			self.nextMovementDirection |= MovementDirection.Down
 		
 
 class Player(Charactor):
 	def __init__(self, texture):
 		Charactor.__init__(self, texture)
 	
-	def determineDirection(self, keyboardHandler):
+	def determineDirection(self, dt, keyboardHandler=None):
 		self.nextMovementDirection = MovementDirection.NoWhere
 		
 		if self.target == None:
-			if keyboardHandler[key.LEFT]:
-				self.nextMovementDirection |= MovementDirection.Left
-			if keyboardHandler[key.RIGHT]:
-				self.nextMovementDirection |= MovementDirection.Right
-			if keyboardHandler[key.UP]:
-				self.nextMovementDirection |= MovementDirection.Up
-			if keyboardHandler[key.DOWN]:
-				self.nextMovementDirection |= MovementDirection.Down
+			if keyboardHandler:
+				if keyboardHandler[key.LEFT]:
+					self.nextMovementDirection |= MovementDirection.Left
+				if keyboardHandler[key.RIGHT]:
+					self.nextMovementDirection |= MovementDirection.Right
+				if keyboardHandler[key.UP]:
+					self.nextMovementDirection |= MovementDirection.Up
+				if keyboardHandler[key.DOWN]:
+					self.nextMovementDirection |= MovementDirection.Down
 		else:
-			if self.target[0] < self.x:
-				self.nextMovementDirection |= MovementDirection.Left
-			elif self.target[0] > self.x:
-				self.nextMovementDirection |= MovementDirection.Right
-			elif self.target[1] > self.y:
-				self.nextMovementDirection |= MovementDirection.Up
-			elif self.target[1] < self.y:
-				self.nextMovementDirection |= MovementDirection.Down
-				
+			Charactor.determineDirection(self, dt)
+	
+	def collide(self, other, dt):
+		if self.target == None:
+			Charactor.collide(self, other, dt)
 
 class Enemy(Charactor):
-	def __init__(self, texture):
-		Charactor.__init__(self, texture)
+	main = None
+	targetPoint = None
+	targetPointThreshold = 3
+	level = 0
 	
-	def determineDirection(self):
-		pass
+	def __init__(self, texture, level, main):
+		Charactor.__init__(self, texture)
+		self.main = main
+		self.level = level
+		
+		self.speed = 50 + self.level*2
+	
+	def routePointReached(self): return self.getDistance(self.targetPoint) < self.targetPointThreshold
+	
+	def determineDirection(self, dt, keyboardHandler=None):
+		self.nextMovementDirection = MovementDirection.NoWhere
+		
+		if self.isInRange(self.main.player):
+			self.targetPoint = None
+			self.target = (self.main.player.x, self.main.player.y)
+			Charactor.determineDirection(self, dt)
+		elif self.targetPoint != None:
+			#print self.getDistance(self.targetPoint),self.target,self.x,self.y
+			if self.routePointReached():
+				self.targetPoint = self.targetPoint.nextPoint
+			else:
+				self.target = (self.targetPoint.x, self.targetPoint.y)
+				Charactor.determineDirection(self, dt)
+		else:
+			self.targetPoint = self.main.currentMap.getNearestRoutPoint(self)
+	
+	def collide(self, other, dt):
+		Charactor.collide(self, other, dt)
+		
+		#todo A-Star algorithm
+		if self.target != None:
+			pass
+		elif self.isInRange(self.main.player) and other != self.main.player:
+			#self.target = (self.main.player.x, self.main.player.y)
+			pass
