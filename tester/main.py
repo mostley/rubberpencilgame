@@ -16,6 +16,7 @@ from gameobjects import *
 from spritetext import *
 from camera import *
 from map import Map
+from settings import Settings
 
 os.environ['PYGLET_SHADOW_WINDOW'] = "0"
 
@@ -129,10 +130,6 @@ class Main(Window):
 		for obj in self.objects:
 			if isinstance(obj, Charactor):
 				obj.update(dt)
-		
-		if self.keyboardHandler[key.SPACE]:
-			self.camera.reset()
-			self.camera.focusOn(self.player)
 	
 	def drawGrid(self):
 		pyglet.gl.glColor3f(0.0, 0.0, 0.0) # set color to black
@@ -188,6 +185,16 @@ class Main(Window):
 			self.camera.zoomIn()
 		elif scroll_y < 0:
 			self.camera.zoomOut()
+	
+	def on_key_press(self, symbol, modifiers):
+		if symbol == Settings["Keyboard_Camera_Center"]:
+			self.camera.reset()
+			self.camera.focusOn(self.player)
+		elif symbol == Settings["Keyboard_Player_Attack"]:
+			self.player.attack()
+		else:
+			Window.on_key_press(self, symbol, modifiers)
+		
 
 if __name__ == "__main__":
 	size = (640, 480)
