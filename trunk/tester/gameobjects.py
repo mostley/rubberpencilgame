@@ -216,13 +216,13 @@ class Player(Charactor):
 		
 		if self.target == None:
 			if keyboardHandler:
-				if keyboardHandler[key.LEFT]:
+				if keyboardHandler[Settings["Keyboard_Player_Left"]]:
 					self.nextMovementDirection |= MovementDirection.Left
-				if keyboardHandler[key.RIGHT]:
+				if keyboardHandler[Settings["Keyboard_Player_Right"]]:
 					self.nextMovementDirection |= MovementDirection.Right
-				if keyboardHandler[key.UP]:
+				if keyboardHandler[Settings["Keyboard_Player_Up"]]:
 					self.nextMovementDirection |= MovementDirection.Up
-				if keyboardHandler[key.DOWN]:
+				if keyboardHandler[Settings["Keyboard_Player_Down"]]:
 					self.nextMovementDirection |= MovementDirection.Down
 		else:
 			Charactor.determineDirection(self, dt)
